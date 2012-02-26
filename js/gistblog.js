@@ -2,8 +2,11 @@ var getGists = function(username) {
     $.getScript("https://api.github.com/users/" + username + "/gists?callback=handleGists");
 };
 
-var renderPostBody = function(gistGUID, bodyText) {
-    $("#" + gistGUID).html(bodyText);
+var renderPostBody = function(gistGUID, dateText, timeText, titleText, bodyText) {
+    $("#" + gistGUID + "-date").html(dateText);
+    $("#" + gistGUID + "-time").html(timeText);
+    $("#" + gistGUID + "-title").html(titleText);
+    $("#" + gistGUID + "-body").html(bodyText);
 };
 
 var handleGists = function(retVal) {
@@ -15,17 +18,20 @@ var handleGists = function(retVal) {
     var blogposts = $.map(gistposts, function(element, index) {
                               console.log("found post \"" + element.description + "\"");
                               var blogpost = new Object();
-                              blogpost.title = element.description;
-                              blogpost.date = element.created_at;
+                              blogpost.title = element.description.slice(8);
+                              blogpost.date = new Date(element.created_at).toLocaleDateString();
+                              blogpost.time = new Date(element.created_at).toLocaleTimeString();
                               blogpost.bodyFile = element.files["gistfile1.txt"].raw_url;
                               blogpost.id = element.id;
                               blogpost.render = function() {
-                                  var script = document.createElement( 'script' );
-                                  script.type = 'text/javascript';
-                                  var url = "https://gist.github.com/" + element.id + ".js";
-                                  script.src = url;
-                                  console.log("getting body for script " + script.src);
-                                  $.getScript(url, function(d) {console.log("done"); console.log(d)});
+                                  var url = "https://api.github.com/gists/" + element.id + "/comments?callback=?";
+                                  console.log("getting body for script " + url);
+                                  $.getJSON(url, function(d) {
+                                                if (d.data.length > 0) {
+                                                    var body = d.data[0].body;
+                                                    renderPostBody(element.id, blogpost.date, blogpost.time, blogpost.title, body);
+                                                }
+                                            });
                               };
                               return blogpost;
                           });
@@ -40,6 +46,18 @@ var renderBlogposts = function(blogposts) {
                console.log("rendering " + element.id);
                var newPostDiv = $('<div class="post" id="' + element.id + '"/>');
                $("#posts").append(newPostDiv);
+
+               var newPostDateDiv = $('<div class="postdate" id="' + element.id + '-date"/>');
+               var newPostTimeDiv = $('<div class="posttime" id="' + element.id + '-time"/>');
+               var newPostTitleDiv = $('<div class="posttitle" id="' + element.id + '-title"/>');
+               var newPostBodyDiv = $('<div class="postbody" id="' + element.id + '-body"/>');
+
+               $(newPostDiv).append(newPostDateDiv, newPostTimeDiv, newPostTitleDiv, newPostBodyDiv);
+
+               // $(newPostDiv).append(newPostDateDiv);
+               // $(newPostDiv).append(newPostTitleDiv);
+               // $(newPostDiv).append(newPostBodyDiv);
+
                element.render();
            });
 };
