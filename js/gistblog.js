@@ -1,3 +1,5 @@
+var converter = new Showdown.converter();
+
 var getGists = function(username) {
     $.getScript("https://api.github.com/users/" + username + "/gists?callback=handleGists");
 };
@@ -18,7 +20,13 @@ var handleGists = function(retVal) {
     var blogposts = $.map(gistposts, function(element, index) {
                               console.log("found post \"" + element.description + "\"");
                               var blogpost = new Object();
-                              blogpost.title = element.description.slice(8);
+                              blogpost.markdown = false;
+                              if (element.description.slice(8,11) === ".md") {
+                                  blogpost.title = element.description.slice(11);
+                                  blogpost.markdown = true;
+                              } else {
+                                  blogpost.title = element.description.slice(8);
+                              }
                               blogpost.date = new Date(element.created_at).toLocaleDateString();
                               blogpost.time = new Date(element.created_at).toLocaleTimeString();
                               blogpost.bodyFile = element.files["gistfile1.txt"].raw_url;
@@ -28,7 +36,7 @@ var handleGists = function(retVal) {
                                   console.log("getting body for script " + url);
                                   $.getJSON(url, function(d) {
                                                 if (d.data.length > 0) {
-                                                    var body = d.data[0].body;
+                                                    var body = blogpost.markdown ? converter.makeHtml(d.data[0].body) : d.data[0].body;
                                                     renderPostBody(element.id, blogpost.date, blogpost.time, blogpost.title, body);
                                                 }
                                             });
