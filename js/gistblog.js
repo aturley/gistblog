@@ -7,7 +7,7 @@ var getGists = function(username) {
 var renderPostBody = function(gistGUID, dateText, timeText, titleText, gistURL, bodyText) {
     $("#" + gistGUID + "-date").html(dateText);
     $("#" + gistGUID + "-time").html(timeText);
-    $("#" + gistGUID + "-title").html(titleText);
+    $("#" + gistGUID + "-title").html("<a href = \"#" + gistGUID+ "\">" + titleText + "</a>");
     $("#" + gistGUID + "-gist").html("<a href=\"" + gistURL + "\">gist</a>");
     $("#" + gistGUID + "-body").html(bodyText);
 };
