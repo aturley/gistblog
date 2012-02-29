@@ -4,10 +4,11 @@ var getGists = function(username) {
     $.getScript("https://api.github.com/users/" + username + "/gists?callback=handleGists");
 };
 
-var renderPostBody = function(gistGUID, dateText, timeText, titleText, bodyText) {
+var renderPostBody = function(gistGUID, dateText, timeText, titleText, gistURL, bodyText) {
     $("#" + gistGUID + "-date").html(dateText);
     $("#" + gistGUID + "-time").html(timeText);
     $("#" + gistGUID + "-title").html(titleText);
+    $("#" + gistGUID + "-gist").html("<a href=\"" + gistURL + "\">gist</a>");
     $("#" + gistGUID + "-body").html(bodyText);
 };
 
@@ -29,7 +30,7 @@ var handleGists = function(retVal) {
                               }
                               blogpost.date = new Date(element.created_at).toLocaleDateString();
                               blogpost.time = new Date(element.created_at).toLocaleTimeString();
-                              blogpost.bodyFile = element.files["gistfile1.txt"].raw_url;
+                              blogpost.gistURL = element.html_url;
                               blogpost.id = element.id;
                               blogpost.render = function() {
                                   var url = "https://api.github.com/gists/" + element.id + "/comments?callback=?";
@@ -37,7 +38,7 @@ var handleGists = function(retVal) {
                                   $.getJSON(url, function(d) {
                                                 if (d.data.length > 0) {
                                                     var body = blogpost.markdown ? converter.makeHtml(d.data[0].body) : d.data[0].body;
-                                                    renderPostBody(element.id, blogpost.date, blogpost.time, blogpost.title, body);
+                                                    renderPostBody(element.id, blogpost.date, blogpost.time, blogpost.title, blogpost.gistURL, body);
                                                 }
                                             });
                               };
@@ -59,8 +60,9 @@ var renderBlogposts = function(blogposts) {
                var newPostTimeDiv = $('<div class="posttime" id="' + element.id + '-time"/>');
                var newPostTitleDiv = $('<div class="posttitle" id="' + element.id + '-title"/>');
                var newPostBodyDiv = $('<div class="postbody" id="' + element.id + '-body"/>');
+               var newPostGistDiv = $('<div class="postgist" id="' + element.id + '-gist"/>');
 
-               $(newPostDiv).append(newPostDateDiv, newPostTimeDiv, newPostTitleDiv, newPostBodyDiv);
+               $(newPostDiv).append(newPostDateDiv, newPostTimeDiv, newPostTitleDiv, newPostGistDiv, newPostBodyDiv);
 
                // $(newPostDiv).append(newPostDateDiv);
                // $(newPostDiv).append(newPostTitleDiv);
