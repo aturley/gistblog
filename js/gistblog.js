@@ -66,6 +66,29 @@ var renderBlogposts = function(blogposts) {
            });
 };
 
+var getGist = function(gistId) {
+    var url = "https://api.github.com/gists/" + gistId + "?callback=handleGist";
+    console.log("getGist(" + gistId + "), url: " + url);
+    $.getScript(url);
+};
+
+var handleGist = function(gist) {
+    console.log("handleGist()");
+    console.log("handling");
+    console.log(gist);
+    handleGists({data:[gist.data]});
+};
+
 $(document).ready(function(){
-                      getGists("aturley");
+                      console.log("window.location.pathname: " + window.location.href);
+                      if (window.location.href.indexOf("#") < 0) {
+                          console.log("get all posts");
+                          getGists("aturley");
+                      } else {
+                          console.log("get one post");
+                          var path = window.location.href;
+                          var gistId = path.substr(path.indexOf("#") + 1);
+                          console.log("get post " + gistId);
+                          getGist(gistId);
+                      }
                   });
