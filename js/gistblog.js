@@ -15,29 +15,23 @@ var renderPostBody = function(gistGUID, dateText, timeText, titleText, gistURL, 
 var handleGists = function(retVal) {
     var gists = retVal.data;
     var gistposts = $.grep(gists, function(element, index) {
-                              console.log("checking gist \"" + element.description.slice(0, 8) + "\"");
+                               console.log("checking gist \"" + element.description.slice(0, 8) + "\"");
                                return (element.description.slice(0, 8) === "BLOGPOST");
                            });
     var blogposts = $.map(gistposts, function(element, index) {
                               console.log("found post \"" + element.description + "\"");
                               var blogpost = new Object();
-                              blogpost.markdown = false;
-                              if (element.description.slice(8,11) === ".md") {
-                                  blogpost.title = element.description.slice(11);
-                                  blogpost.markdown = true;
-                              } else {
-                                  blogpost.title = element.description.slice(8);
-                              }
+                              blogpost.title = element.description.slice(8);
                               blogpost.date = new Date(element.created_at).toLocaleDateString();
                               blogpost.time = new Date(element.created_at).toLocaleTimeString();
                               blogpost.gistURL = element.html_url;
                               blogpost.id = element.id;
                               blogpost.render = function() {
-                                  var url = "https://api.github.com/gists/" + element.id + "/comments?callback=?";
+                                  var url = "https://api.github.com/gists/" + element.id + "?callback=?";
                                   console.log("getting body for script " + url);
                                   $.getJSON(url, function(d) {
-                                                if (d.data.length > 0) {
-                                                    var body = blogpost.markdown ? converter.makeHtml(d.data[0].body) : d.data[0].body;
+                                                if (d.data.files["gistfile1.md"]) {
+                                                    var body = converter.makeHtml(d.data.files["gistfile1.md"].content);
                                                     renderPostBody(element.id, blogpost.date, blogpost.time, blogpost.title, blogpost.gistURL, body);
                                                 }
                                             });
