@@ -80,14 +80,16 @@ var handleGist = function(gist) {
 };
 
 $(document).ready(function(){
+                      var href = window.location.href;
+                      var host = window.location.host;
+                      var username = host.substring(0, host.indexOf("\."));
                       console.log("window.location.pathname: " + window.location.href);
-                      if (window.location.href.indexOf("#") < 0) {
+                      if (href.indexOf("#") < 0) {
                           console.log("get all posts");
-                          getGists("aturley");
+                          getGists(username);
                       } else {
                           console.log("get one post");
-                          var path = window.location.href;
-                          var gistId = path.substr(path.indexOf("#") + 1);
+                          var gistId = href.substr(href.indexOf("#") + 1);
                           console.log("get post " + gistId);
                           getGist(gistId);
                       }
