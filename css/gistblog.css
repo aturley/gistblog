@@ -3,12 +3,29 @@
 }
 
 .post {
+    border-radius: 5px;
     margin: 20px;
-    background-color: #0F0F0F;
+    padding: 10px;
+    background-color: #808080;
     color: #FFFFFF;
 }
 
 .postTitle {
     background-color: #FF0000;
     color: #0000FF;
+    border-radius: 5px;
+    width: 50%;
+    padding: 5px;
+    font-size: 200%;
+}
+
+.postBody {
+    background-color: #A0A0A0;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+body {
+    font:15px sans-serif;
+    background-color: #606060;
 }
