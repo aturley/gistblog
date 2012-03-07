@@ -83,8 +83,7 @@ var handleGist = function(gist) {
 $(document).ready(function(){
                       var href = window.location.href;
                       var host = window.location.host;
-                      // var username = host.substring(0, host.indexOf("\."));
-                      var username = "aturley";
+                      var username = host.substring(0, host.indexOf("\."));
                       console.log("window.location.pathname: " + window.location.href);
                       if (href.indexOf("#") < 0) {
                           console.log("get all posts");
