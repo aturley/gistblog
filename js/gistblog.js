@@ -47,16 +47,17 @@ var handleGists = function(retVal) {
 var renderBlogposts = function(blogposts) {
     $.each(blogposts, function(index, element) {
                console.log("rendering " + element.id);
-               var newPostDiv = $('<div class="post" id="' + element.id + '"/>');
+               var newPostDiv = $("#postPrototype").clone(true, true);
                $("#posts").append(newPostDiv);
+               newPostDiv.attr("id", element.id);
+               newPostDiv.attr("class", "post");
+               newPostDiv.children(".postTitle").attr("id", element.id + "-title");
+               newPostDiv.children(".postDate").attr("id", element.id + "-date");
+               newPostDiv.children(".postTime").attr("id", element.id + "-time");
+               newPostDiv.children(".postGist").attr("id", element.id + "-gist");
+               newPostDiv.children(".postBody").attr("id", element.id + "-body");
 
-               var newPostDateDiv = $('<div class="postdate" id="' + element.id + '-date"/>');
-               var newPostTimeDiv = $('<div class="posttime" id="' + element.id + '-time"/>');
-               var newPostTitleDiv = $('<div class="posttitle" id="' + element.id + '-title"/>');
-               var newPostBodyDiv = $('<div class="postbody" id="' + element.id + '-body"/>');
-               var newPostGistDiv = $('<div class="postgist" id="' + element.id + '-gist"/>');
-
-               $(newPostDiv).append(newPostDateDiv, newPostTimeDiv, newPostTitleDiv, newPostGistDiv, newPostBodyDiv);
+               // $(newPostDiv).append(newPostDateDiv, newPostTimeDiv, newPostTitleDiv, newPostGistDiv, newPostBodyDiv);
 
                // $(newPostDiv).append(newPostDateDiv);
                // $(newPostDiv).append(newPostTitleDiv);
@@ -82,7 +83,8 @@ var handleGist = function(gist) {
 $(document).ready(function(){
                       var href = window.location.href;
                       var host = window.location.host;
-                      var username = host.substring(0, host.indexOf("\."));
+                      // var username = host.substring(0, host.indexOf("\."));
+                      var username = "aturley";
                       console.log("window.location.pathname: " + window.location.href);
                       if (href.indexOf("#") < 0) {
                           console.log("get all posts");
