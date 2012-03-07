@@ -1,10 +1,14 @@
+.postPrototype {
+    display: none;
+}
+
 .post {
     margin: 20px;
     background-color: #0F0F0F;
     color: #FFFFFF;
 }
 
-.posttitle {
+.postTitle {
     background-color: #FF0000;
     color: #0000FF;
 }
